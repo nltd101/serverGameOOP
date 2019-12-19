@@ -14,16 +14,30 @@ var scoreChema = new mongoose.Schema({
   });
 var scoreModel = mongoose.model('Score',scoreChema);
 
-app.get('/getscore',async function(req,res){
-  //  console.log(await scoreModel.find());
-    res.send(await scoreModel.find());
+router.get('/getscore', function(req,res){
+    var list =scoreModel.find({},
+        function(err,list)
+        {
+            console.log(list);
+            list.sort(function(a,b){
+                if (a.score>b.score) return -1;
+                return 1;
+              })
+              var s="";
+              for (var i =0; i<min(5,list.length); i++)    
+              {
+                  if ((list[i].name)&&(list[i].score))
+                  s=s+list[i].name+" "+list[i].score+",";
+              }
+              res.send(s);
+        });
 })
-app.get('/pushscore',function(req,res){
-    console.log(req.query);
+router.get('/pushscore',function(req,res){
+    console.log(req.query)
      var score = new scoreModel({
          name:req.query.name,
          score:req.query.score
      });
      score.save();
-     res.send('hello');
+     res.send('success');
 })
