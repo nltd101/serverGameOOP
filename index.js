@@ -12,9 +12,13 @@ var scoreChema = new mongoose.Schema({
     name: String,
     score:Number
   });
+  var min= function(a,b){
+    if (a>b) return b;
+    return a;
+}
 var scoreModel = mongoose.model('Score',scoreChema);
 
-router.get('/getscore', function(req,res){
+app.get('/getscore', function(req,res){
     var list =scoreModel.find({},
         function(err,list)
         {
@@ -32,7 +36,7 @@ router.get('/getscore', function(req,res){
               res.send(s);
         });
 })
-router.get('/pushscore',function(req,res){
+app.get('/pushscore',function(req,res){
     console.log(req.query)
      var score = new scoreModel({
          name:req.query.name,
